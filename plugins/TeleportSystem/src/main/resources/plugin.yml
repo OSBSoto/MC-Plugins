@@ -1,0 +1,67 @@
+name: TeleportSystem
+version: ${project.version}
+main: com.osbsoto.teleportsystem.TeleportSystem
+api-version: 1.20
+description: Provides teleportation features including spawn management and player TPA requests.
+author: OSBSoto
+
+commands:
+  spawn:
+    description: Teleports you to the world spawn.
+    usage: /spawn
+    permission: teleportsystem.spawn
+    permission-message: You do not have permission to use this command.
+  setspawn:
+    description: Sets the world spawn at your current location.
+    usage: /setspawn
+    permission: teleportsystem.setspawn
+    permission-message: You do not have permission to use this command.
+  back:
+    description: Teleports you to your previous location.
+    usage: /back
+    permission: teleportsystem.back
+    permission-message: You do not have permission to use this command.
+  tpa:
+    description: Sends a teleport request to another player.
+    usage: /tpa <player>
+    permission: teleportsystem.tpa
+    permission-message: You do not have permission to use this command.
+  tpaccept:
+    description: Accepts a pending teleport request.
+    usage: /tpaccept
+    permission: teleportsystem.tpaccept
+    permission-message: You do not have permission to use this command.
+  tpdeny:
+    description: Denies a pending teleport request.
+    usage: /tpdeny
+    permission: teleportsystem.tpdeny
+    permission-message: You do not have permission to use this command.
+
+permissions:
+  teleportsystem.*:
+    description: Grants all TeleportSystem permissions.
+    children:
+      teleportsystem.spawn: true
+      teleportsystem.setspawn: true
+      teleportsystem.back: true
+      teleportsystem.tpa: true
+      teleportsystem.tpaccept: true
+      teleportsystem.tpdeny: true
+  teleportsystem.spawn:
+    description: Allows the use of /spawn.
+    default: true
+  teleportsystem.setspawn:
+    description: Allows the use of /setspawn.
+    default: op
+  teleportsystem.back:
+    description: Allows the use of /back.
+    default: true
+  teleportsystem.tpa:
+    description: Allows the use of /tpa.
+    default: true
+  teleportsystem.tpaccept:
+    description: Allows the use of /tpaccept.
+    default: true
+  teleportsystem.tpdeny:
+    description: Allows the use of /tpdeny.
+    default: true

@@ -1,0 +1,86 @@
+name: BasicUtilities
+version: ${project.version}
+main: com.osbsoto.basicutilities.BasicUtilities
+api-version: 1.20
+description: Provides essential player utility commands.
+author: OSBSoto
+
+commands:
+  heal:
+    description: Heals a player to full health.
+    usage: /heal [player]
+    permission: basicutilities.heal
+    permission-message: You do not have permission to use this command.
+  feed:
+    description: Feeds a player to full hunger.
+    usage: /feed [player]
+    permission: basicutilities.feed
+    permission-message: You do not have permission to use this command.
+  fly:
+    description: Toggles fly mode for a player.
+    usage: /fly [player]
+    permission: basicutilities.fly
+    permission-message: You do not have permission to use this command.
+  god:
+    description: Toggles god mode (invincibility) for a player.
+    usage: /god [player]
+    permission: basicutilities.god
+    permission-message: You do not have permission to use this command.
+  gamemode:
+    description: Changes the gamemode of a player.
+    usage: /gamemode <survival|creative|adventure|spectator> [player]
+    aliases: [gm]
+    permission: basicutilities.gamemode
+    permission-message: You do not have permission to use this command.
+  speed:
+    description: Sets the walk or fly speed of a player.
+    usage: /speed <1-10> [fly|walk] [player]
+    permission: basicutilities.speed
+    permission-message: You do not have permission to use this command.
+
+permissions:
+  basicutilities.*:
+    description: Grants all BasicUtilities permissions.
+    children:
+      basicutilities.heal: true
+      basicutilities.feed: true
+      basicutilities.fly: true
+      basicutilities.god: true
+      basicutilities.gamemode: true
+      basicutilities.speed: true
+  basicutilities.heal:
+    description: Allows the use of /heal.
+    default: op
+  basicutilities.heal.others:
+    description: Allows healing other players.
+    default: op
+  basicutilities.feed:
+    description: Allows the use of /feed.
+    default: op
+  basicutilities.feed.others:
+    description: Allows feeding other players.
+    default: op
+  basicutilities.fly:
+    description: Allows the use of /fly.
+    default: op
+  basicutilities.fly.others:
+    description: Allows toggling fly for other players.
+    default: op
+  basicutilities.god:
+    description: Allows the use of /god.
+    default: op
+  basicutilities.god.others:
+    description: Allows toggling god mode for other players.
+    default: op
+  basicutilities.gamemode:
+    description: Allows the use of /gamemode.
+    default: op
+  basicutilities.gamemode.others:
+    description: Allows changing gamemode for other players.
+    default: op
+  basicutilities.speed:
+    description: Allows the use of /speed.
+    default: op
+  basicutilities.speed.others:
+    description: Allows changing speed for other players.
+    default: op

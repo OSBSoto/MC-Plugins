@@ -1,0 +1,11 @@
+# HomeSystem Configuration
+
+# Maximum number of homes a player can have
+# Players with 'homesystem.multiplehomes' permission ignore this limit
+max-homes: 3
+
+# Teleport delay in seconds (0 to disable)
+teleport-delay: 3
+
+# Whether to cancel teleport if the player moves during the delay
+cancel-on-move: true

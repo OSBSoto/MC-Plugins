@@ -1,0 +1,52 @@
+name: HomeSystem
+version: ${project.version}
+main: com.osbsoto.homesystem.HomeSystem
+api-version: 1.20
+description: Allows players to set and teleport to personal home locations.
+author: OSBSoto
+
+commands:
+  home:
+    description: Teleports you to a saved home location.
+    usage: /home [name]
+    permission: homesystem.home
+    permission-message: You do not have permission to use this command.
+  sethome:
+    description: Sets a home at your current location.
+    usage: /sethome [name]
+    permission: homesystem.sethome
+    permission-message: You do not have permission to use this command.
+  delhome:
+    description: Deletes a saved home location.
+    usage: /delhome <name>
+    permission: homesystem.delhome
+    permission-message: You do not have permission to use this command.
+  homes:
+    description: Lists all your saved home locations.
+    usage: /homes
+    permission: homesystem.homes
+    permission-message: You do not have permission to use this command.
+
+permissions:
+  homesystem.*:
+    description: Grants all HomeSystem permissions.
+    children:
+      homesystem.home: true
+      homesystem.sethome: true
+      homesystem.delhome: true
+      homesystem.homes: true
+  homesystem.home:
+    description: Allows the use of /home.
+    default: true
+  homesystem.sethome:
+    description: Allows the use of /sethome.
+    default: true
+  homesystem.delhome:
+    description: Allows the use of /delhome.
+    default: true
+  homesystem.homes:
+    description: Allows the use of /homes.
+    default: true
+  homesystem.multiplehomes:
+    description: Allows setting multiple homes beyond the default limit.
+    default: op

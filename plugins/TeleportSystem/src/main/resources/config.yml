@@ -1,0 +1,10 @@
+# TeleportSystem Configuration
+
+# Teleport delay in seconds for /spawn and /back (0 to disable)
+teleport-delay: 3
+
+# Whether to cancel teleport if the player moves during the delay
+cancel-on-move: true
+
+# TPA request expiry time in seconds
+tpa-expire-time: 60
