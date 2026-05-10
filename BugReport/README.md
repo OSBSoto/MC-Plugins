@@ -4,6 +4,7 @@ Minimal Paper plugin for in-game bug reporting via DiscordSRV.
 ## Features
 
 - `/bug <message>` command for players
+- `/bug version` command to view plugin/auth status
 - Sends report to a Discord channel through DiscordSRV
 - Includes timestamp, player name, world, XYZ, and message
 - Optionally includes the latest captured server log line
@@ -17,7 +18,7 @@ Missing keys from newer plugin versions are auto-added on startup and `/bugrepor
 - `discordChannel`: DiscordSRV game channel mapping key (default: `admin`)
 - `embedTemplateFile`: embed template file name in plugin folder (default: `discord-embed.yml`)
 - `includeRecentConsoleLine`: include last captured server log line (`true`/`false`)
-- `license.licenseKey`: server license key (`""` is allowed and maps to unlicensed mode)
+- `license.licenseKey`: optional server license key (leave empty to run in unlicensed mode)
 - `cooldown.enabled`: enable/disable report cooldown (`true`/`false`)
 - `cooldown.seconds`: cooldown duration per player
 - `cooldown.message`: message shown when still on cooldown (`{seconds_left}` supported)
@@ -55,6 +56,11 @@ Set these in `embed.mention` (or in any field/title/description using placeholde
 
 - In-game: `/bugreport reload` (requires `bugreport.reload`)
 - Console: `bugreport reload`
+
+## Version Command
+
+- In-game/console: `/bug version`
+- Shows plugin version and current AuthAPI status
 
 ### Available placeholders
 
