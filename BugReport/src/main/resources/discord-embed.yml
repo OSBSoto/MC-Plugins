@@ -1,0 +1,24 @@
+embed:
+  enabled: true
+  # Optional mention text sent before the embed (examples: <@123456789012345678>, <@&ROLE_ID>, @here)
+  mention: ""
+  title: "Bug Report from {username}"
+  description: "{message}"
+  color: "#E74C3C"
+  thumbnailUrl: ""
+  fields:
+    - name: "Time"
+      value: "{timestamp}"
+      inline: true
+    - name: "Player"
+      value: "{username} {linked_discord_mention}"
+      inline: true
+    - name: "Location"
+      value: "{world} | {xyz}"
+      inline: false
+    - name: "Recent Chat"
+      value: "{chat_history}"
+      inline: false
+    - name: "Last Console Line"
+      value: "{console_line}"
+      inline: false

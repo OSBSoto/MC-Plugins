@@ -1,0 +1,34 @@
+# DiscordSRV game channel name -> Discord channel mapping key from DiscordSRV's config.
+discordChannel: "admin"
+
+# External file used to build Discord embeds for bug reports.
+embedTemplateFile: "discord-embed.yml"
+
+# Include the latest line captured from the server logger in each bug report.
+includeRecentConsoleLine: true
+
+# How many recent public chat lines to include in the report.
+chatHistorySize: 10
+
+# Startup license validation settings.
+# appName is intentionally hardcoded in code and must match the API registration exactly.
+license:
+  apiUrl: "https://authapi.rhynohost.com"
+  licenseKey: "XXXX-XXXX-XXXX-XXXX"
+  currentVersion: "1.0.0"
+
+cooldown:
+  enabled: true
+  seconds: 45
+  message: "Please wait {seconds_left}s before creating another bug report."
+
+linkedDiscord:
+  enabled: true
+  includeLinkedMention: true
+  unlinkedPlaceholder: "(not linked)"
+
+playerMessages:
+  initializing: "Initializing report"
+  success: "Bug Reported"
+  failure: "Could not send report to Discord right now."
+
