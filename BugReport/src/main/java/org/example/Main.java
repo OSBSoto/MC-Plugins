@@ -20,6 +20,7 @@ public final class Main extends JavaPlugin {
     // 24 hours in server ticks (20 ticks/s)
     private static final long TICKS_PER_24H = 20L * 60 * 60 * 24;
 
+    private final long startupStartedAtMillis = System.currentTimeMillis();
     private ConsoleLineBuffer consoleLineBuffer;
     private ChatHistoryBuffer chatHistoryBuffer;
     private LicenseResult licenseResult;
@@ -33,13 +34,14 @@ public final class Main extends JavaPlugin {
         LicenseResult licenseResult = new LicenseValidator(this).validate();
         this.licenseResult = licenseResult;
 
-        if (licenseResult.isUnlicensed()) {
-            scheduleUnlicensedWarning();
-        } else if (!licenseResult.reachable()) {
+        if (!licenseResult.reachable()) {
             getLogger().warning("License server unreachable. Continuing startup (fail-open). " + licenseResult.message());
-        } else if (!licenseResult.isValid()) {
-            logInvalidLicenseAndDisable(licenseResult.message());
+        } else if (licenseResult.isBlockedMode() || !licenseResult.isValid()) {
+            String blockReason = licenseResult.blockReason().isBlank() ? licenseResult.message() : licenseResult.blockReason();
+            logInvalidLicenseAndDisable(blockReason);
             return;
+        } else if (licenseResult.isUnlicensedMode()) {
+            scheduleUnlicensedWarning();
         }
 
         if (licenseResult.isUpdateAvailable()) {
@@ -74,8 +76,7 @@ public final class Main extends JavaPlugin {
 
     private void scheduleUnlicensedWarning() {
         getServer().getScheduler().runTaskTimerAsynchronously(this, () ->
-            getLogger().warning("[BugReport] Running without a license key. No license is required for this plugin. " +
-                    "To register a license, add your key to plugins/BugReport/config.yml under license.licenseKey."),
+            getLogger().warning("[BugReport] AuthAPI mode is UNLICENSED. Plugin will continue running."),
         0L, TICKS_PER_24H);
     }
 
@@ -150,6 +151,10 @@ public final class Main extends JavaPlugin {
 
     public LicenseResult getLicenseResult() {
         return licenseResult;
+    }
+
+    public long getStartupStartedAtMillis() {
+        return startupStartedAtMillis;
     }
 
     private void ensureDefaultEmbedTemplate() {

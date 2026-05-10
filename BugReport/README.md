@@ -14,13 +14,10 @@ Minimal Paper plugin for in-game bug reporting via DiscordSRV.
 Edit `plugins/BugReport/config.yml` after first run:
 
 Missing keys from newer plugin versions are auto-added on startup and `/bugreport reload`.
-
 - `discordChannel`: DiscordSRV game channel mapping key (default: `admin`)
 - `embedTemplateFile`: embed template file name in plugin folder (default: `discord-embed.yml`)
 - `includeRecentConsoleLine`: include last captured server log line (`true`/`false`)
-- `license.apiUrl`: licensing API base URL (for example `https://authapi.rhynohost.com`)
-- `license.licenseKey`: your license key string
-- `license.currentVersion`: current plugin/application version sent to API
+- `license.licenseKey`: server license key (`""` is allowed and maps to unlicensed mode)
 - `cooldown.enabled`: enable/disable report cooldown (`true`/`false`)
 - `cooldown.seconds`: cooldown duration per player
 - `cooldown.message`: message shown when still on cooldown (`{seconds_left}` supported)
@@ -33,10 +30,12 @@ Missing keys from newer plugin versions are auto-added on startup and `/bugrepor
 
 ## License Validation on Startup
 
-- On startup the plugin reads `license.licenseKey`, `license.currentVersion`, and `license.apiUrl` from `config.yml`.
-- It sends `POST {apiUrl}/api/license/validate` with JSON body containing `licenseKey`, hardcoded `appName`, and `currentVersion`.
+- On startup the plugin reads `license.licenseKey` from `config.yml`.
+- The AuthAPI endpoint URL and `currentVersion` value are internal (not user-configurable in `config.yml`).
+- It sends `POST /api/license/validate` with the required AuthAPI validation payload.
 - Request timeout is 10 seconds.
-- If the API is reachable and returns `isValid: false`, plugin startup is blocked and the plugin disables itself.
+- If mode is `blocked` (or `isValid: false`), startup is blocked and the plugin disables itself.
+- If mode is `unlicensed`, startup continues and a non-intrusive console notice is logged every 24h.
 - If the API is unreachable/times out, startup continues (fail-open) and a warning is logged.
 - If `isUpdateAvailable: true`, a non-blocking update notification is shown (console + online OPs), including version and URL.
 

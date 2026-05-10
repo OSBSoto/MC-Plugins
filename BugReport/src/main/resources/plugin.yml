@@ -7,7 +7,7 @@ softdepend:
 commands:
   bug:
     description: Report an issue to staff via Discord
-    usage: /bug <message>
+    usage: /bug <message> | /bug version
   bugreport:
     description: BugReport administration command
     usage: /bugreport reload

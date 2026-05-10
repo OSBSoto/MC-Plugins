@@ -44,7 +44,7 @@ public final class BugCommand implements CommandExecutor, TabCompleter {
         }
 
         if (!(sender instanceof Player player)) {
-            sender.sendMessage(ChatColor.RED + "Console usage: bugreport reload");
+            sender.sendMessage(ChatColor.RED + "Console usage: bugreport reload | bug version");
             return true;
         }
 
@@ -129,16 +129,20 @@ public final class BugCommand implements CommandExecutor, TabCompleter {
 
     private void sendVersionInfo(CommandSender sender) {
         String version = plugin.getDescription().getVersion();
+        String currentVersion = version;
         LicenseResult result = plugin.getLicenseResult();
 
         sender.sendMessage(ChatColor.GOLD + "=== BugReport " + ChatColor.YELLOW + "v" + version + ChatColor.GOLD + " ===");
+        sender.sendMessage(ChatColor.GRAY + "Validation currentVersion: " + ChatColor.WHITE + currentVersion);
 
-        if (result == null || result.isUnlicensed()) {
-            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.WHITE + "Unlicensed (running free)");
+        if (result == null) {
+            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.YELLOW + "Not checked yet");
         } else if (!result.reachable()) {
             sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.YELLOW + "Server unreachable");
+        } else if (result.isUnlicensedMode()) {
+            sender.sendMessage(ChatColor.GRAY + "License mode: " + ChatColor.WHITE + "unlicensed");
         } else if (result.isValid()) {
-            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.GREEN + "Valid");
+            sender.sendMessage(ChatColor.GRAY + "License mode: " + ChatColor.GREEN + result.mode());
             if (result.expirationDate() != null && !result.expirationDate().isBlank()) {
                 sender.sendMessage(ChatColor.GRAY + "Expires: " + ChatColor.WHITE + result.expirationDate());
             }
@@ -146,9 +150,13 @@ public final class BugCommand implements CommandExecutor, TabCompleter {
                 sender.sendMessage(ChatColor.GRAY + "Update: " + ChatColor.AQUA + "v" + result.latestVersion() + " available — " + result.downloadUrl());
             }
         } else {
-            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.RED + "Invalid");
-            if (result.message() != null && !result.message().isBlank()) {
-                sender.sendMessage(ChatColor.RED + result.message());
+            sender.sendMessage(ChatColor.GRAY + "License mode: " + ChatColor.RED + result.mode());
+            String reason = result.blockReason();
+            if (reason == null || reason.isBlank()) {
+                reason = result.message();
+            }
+            if (reason != null && !reason.isBlank()) {
+                sender.sendMessage(ChatColor.RED + reason);
             }
         }
     }
