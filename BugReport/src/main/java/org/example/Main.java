@@ -17,8 +17,12 @@ import java.util.Objects;
 
 public final class Main extends JavaPlugin {
 
+    // 24 hours in server ticks (20 ticks/s)
+    private static final long TICKS_PER_24H = 20L * 60 * 60 * 24;
+
     private ConsoleLineBuffer consoleLineBuffer;
     private ChatHistoryBuffer chatHistoryBuffer;
+    private LicenseResult licenseResult;
 
     @Override
     public void onEnable() {
@@ -27,7 +31,11 @@ public final class Main extends JavaPlugin {
         ensureEmbedTemplateDefaultsMerged();
 
         LicenseResult licenseResult = new LicenseValidator(this).validate();
-        if (!licenseResult.reachable()) {
+        this.licenseResult = licenseResult;
+
+        if (licenseResult.isUnlicensed()) {
+            scheduleUnlicensedWarning();
+        } else if (!licenseResult.reachable()) {
             getLogger().warning("License server unreachable. Continuing startup (fail-open). " + licenseResult.message());
         } else if (!licenseResult.isValid()) {
             logInvalidLicenseAndDisable(licenseResult.message());
@@ -62,6 +70,13 @@ public final class Main extends JavaPlugin {
         }
         bugReportCommand.setExecutor(executor);
         bugReportCommand.setTabCompleter(executor);
+    }
+
+    private void scheduleUnlicensedWarning() {
+        getServer().getScheduler().runTaskTimerAsynchronously(this, () ->
+            getLogger().warning("[BugReport] Running without a license key. No license is required for this plugin. " +
+                    "To register a license, add your key to plugins/BugReport/config.yml under license.licenseKey."),
+        0L, TICKS_PER_24H);
     }
 
     private void logInvalidLicenseAndDisable(String message) {
@@ -131,6 +146,10 @@ public final class Main extends JavaPlugin {
 
     public ChatHistoryBuffer getChatHistoryBuffer() {
         return chatHistoryBuffer;
+    }
+
+    public LicenseResult getLicenseResult() {
+        return licenseResult;
     }
 
     private void ensureDefaultEmbedTemplate() {

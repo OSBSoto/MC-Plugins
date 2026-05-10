@@ -13,8 +13,9 @@ import java.util.regex.Pattern;
 public final class LicenseValidator {
 
     private static final String APP_NAME = "BugReport";
+    private static final String API_URL = "https://authapi.rhynohost.com";
     private static final Duration REQUEST_TIMEOUT = Duration.ofSeconds(10);
-    private static final Pattern STRING_PATTERN_TEMPLATE = Pattern.compile("\"%s\"\\s*:\\s*\"((?:\\\\.|[^\\\"])*)\"");
+    private static final Pattern STRING_PATTERN_TEMPLATE = Pattern.compile("\"%s\"\\s*:\\s*\"((?:\\\\.|[^\"\\\\])*)\"");
     private static final Pattern BOOLEAN_PATTERN_TEMPLATE = Pattern.compile("\"%s\"\\s*:\\s*(true|false)");
 
     private final Main plugin;
@@ -28,19 +29,18 @@ public final class LicenseValidator {
     }
 
     public LicenseResult validate() {
-        String apiUrl = trim(plugin.getConfig().getString("license.apiUrl", ""));
         String licenseKey = trim(plugin.getConfig().getString("license.licenseKey", ""));
-        String currentVersion = trim(plugin.getConfig().getString("license.currentVersion", ""));
+        String currentVersion = plugin.getDescription().getVersion();
 
-        if (apiUrl.isBlank() || licenseKey.isBlank() || currentVersion.isBlank()) {
-            return LicenseResult.unreachable("Missing one or more license config values (apiUrl/licenseKey/currentVersion).");
+        if (licenseKey.isBlank()) {
+            return LicenseResult.unlicensed();
         }
 
         URI uri;
         try {
-            uri = new URI(normalizeBaseUrl(apiUrl) + "/api/license/validate");
+            uri = new URI(API_URL + "/api/license/validate");
         } catch (URISyntaxException exception) {
-            return LicenseResult.unreachable("Invalid license API URL in config: " + exception.getMessage());
+            return LicenseResult.unreachable("Invalid internal API URL: " + exception.getMessage());
         }
 
         String requestJson = "{"
@@ -162,4 +162,3 @@ public final class LicenseValidator {
         return output.toString();
     }
 }
-

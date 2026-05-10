@@ -10,12 +10,11 @@ includeRecentConsoleLine: true
 # How many recent public chat lines to include in the report.
 chatHistorySize: 10
 
-# Startup license validation settings.
-# appName is intentionally hardcoded in code and must match the API registration exactly.
+# License key for this plugin (optional).
+# No license is needed for this plugin to function.
+# If you have a license key, enter it below. Leave blank to run without one.
 license:
-  apiUrl: "https://authapi.rhynohost.com"
-  licenseKey: "XXXX-XXXX-XXXX-XXXX"
-  currentVersion: "1.0.0"
+  licenseKey: ""
 
 cooldown:
   enabled: true

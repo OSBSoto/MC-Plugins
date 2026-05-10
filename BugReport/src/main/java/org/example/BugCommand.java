@@ -38,6 +38,11 @@ public final class BugCommand implements CommandExecutor, TabCompleter {
             return true;
         }
 
+        if (args.length == 1 && args[0].equalsIgnoreCase("version")) {
+            sendVersionInfo(sender);
+            return true;
+        }
+
         if (!(sender instanceof Player player)) {
             sender.sendMessage(ChatColor.RED + "Console usage: bugreport reload");
             return true;
@@ -108,15 +113,44 @@ public final class BugCommand implements CommandExecutor, TabCompleter {
 
     @Override
     public List<String> onTabComplete(CommandSender sender, Command command, String label, String[] args) {
-        // Only suggest "reload" as first argument and only to OPs.
-        // Return empty list in all other cases to suppress default player-name suggestions.
-        if (args.length == 1 && sender.isOp()) {
+        if (args.length == 1) {
             String partial = args[0].toLowerCase();
-            if ("reload".startsWith(partial)) {
-                return List.of("reload");
+            List<String> suggestions = new java.util.ArrayList<>();
+            if ("version".startsWith(partial)) {
+                suggestions.add("version");
             }
+            if (sender.isOp() && "reload".startsWith(partial)) {
+                suggestions.add("reload");
+            }
+            return suggestions;
         }
         return Collections.emptyList();
+    }
+
+    private void sendVersionInfo(CommandSender sender) {
+        String version = plugin.getDescription().getVersion();
+        LicenseResult result = plugin.getLicenseResult();
+
+        sender.sendMessage(ChatColor.GOLD + "=== BugReport " + ChatColor.YELLOW + "v" + version + ChatColor.GOLD + " ===");
+
+        if (result == null || result.isUnlicensed()) {
+            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.WHITE + "Unlicensed (running free)");
+        } else if (!result.reachable()) {
+            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.YELLOW + "Server unreachable");
+        } else if (result.isValid()) {
+            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.GREEN + "Valid");
+            if (result.expirationDate() != null && !result.expirationDate().isBlank()) {
+                sender.sendMessage(ChatColor.GRAY + "Expires: " + ChatColor.WHITE + result.expirationDate());
+            }
+            if (result.isUpdateAvailable()) {
+                sender.sendMessage(ChatColor.GRAY + "Update: " + ChatColor.AQUA + "v" + result.latestVersion() + " available — " + result.downloadUrl());
+            }
+        } else {
+            sender.sendMessage(ChatColor.GRAY + "License: " + ChatColor.RED + "Invalid");
+            if (result.message() != null && !result.message().isBlank()) {
+                sender.sendMessage(ChatColor.RED + result.message());
+            }
+        }
     }
 
     private boolean isOnCooldown(Player player) {
